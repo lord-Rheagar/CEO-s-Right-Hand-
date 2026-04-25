@@ -1,0 +1,384 @@
+schema: paperclip/v1
+
+# ============================================================================
+# CEO's Office — Paperclip runtime sidecar
+# ============================================================================
+# This file carries vendor-specific runtime config (adapters, cron triggers,
+# budgets) that does not belong in the portable COMPANY.md / AGENTS.md base.
+#
+# Base-format tools ignore this file. Paperclip reads it at import time.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Adapter configs — per agent
+# ----------------------------------------------------------------------------
+# All agents default to claude_local with claude-opus-4-7. Sub-agents use
+# medium or low effort to save tokens; Chief of Staff runs at high.
+# ----------------------------------------------------------------------------
+
+agents:
+  chief-of-staff:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: high
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 500000
+      daily_cost_cap_usd: 25.00
+
+  inbox-triage:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        GOOGLE_OAUTH_TOKEN:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 800000
+      daily_cost_cap_usd: 20.00
+
+  slack-liaison:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        SLACK_BOT_TOKEN:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 800000
+      daily_cost_cap_usd: 20.00
+
+  scheduler:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        GOOGLE_OAUTH_TOKEN:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 200000
+      daily_cost_cap_usd: 10.00
+
+  task-tracker:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        NOTION_TOKEN:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 300000
+      daily_cost_cap_usd: 12.00
+
+  talent-scout:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        GOOGLE_OAUTH_TOKEN:
+          kind: secret
+          requirement: required
+        NOTION_TOKEN:
+          kind: secret
+          requirement: required
+        BRAVE_API_KEY:
+          kind: secret
+          requirement: optional
+    budget:
+      daily_token_cap: 400000
+      daily_cost_cap_usd: 15.00
+
+  contractor-ops:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        NOTION_TOKEN:
+          kind: secret
+          requirement: required
+        GOOGLE_OAUTH_TOKEN:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 200000
+      daily_cost_cap_usd: 10.00
+
+  finance-data:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        STRIPE_API_KEY:
+          kind: secret
+          requirement: required
+        RAMP_API_KEY:
+          kind: secret
+          requirement: optional
+        NOTION_TOKEN:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 200000
+      daily_cost_cap_usd: 10.00
+    permissions:
+      # Hard guardrail: finance agent has read-only scope on money systems
+      scopes:
+        - stripe:read
+        - ramp:read
+        - notion:write
+      denied:
+        - stripe:write
+        - ramp:write
+
+  vendor-manager:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        NOTION_TOKEN:
+          kind: secret
+          requirement: required
+        BRAVE_API_KEY:
+          kind: secret
+          requirement: optional
+    budget:
+      daily_token_cap: 300000
+      daily_cost_cap_usd: 12.00
+
+  retreat-travel:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: medium
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        BRAVE_API_KEY:
+          kind: secret
+          requirement: optional
+        GOOGLE_OAUTH_TOKEN:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 300000
+      daily_cost_cap_usd: 12.00
+
+  supplies-errands:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: low
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        NOTION_TOKEN:
+          kind: secret
+          requirement: required
+        BRAVE_API_KEY:
+          kind: secret
+          requirement: optional
+    budget:
+      daily_token_cap: 100000
+      daily_cost_cap_usd: 5.00
+
+  automation-engineer:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-7
+        effort: high
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+    budget:
+      daily_token_cap: 400000
+      daily_cost_cap_usd: 20.00
+    permissions:
+      scopes:
+        - filesystem:read
+        - filesystem:write-proposals  # drafts only, actual commits require human approval
+
+# ----------------------------------------------------------------------------
+# Routines — cron triggers for recurring tasks
+# ----------------------------------------------------------------------------
+# Timezone: Pacific/Honolulu (HST, UTC-10)
+# ----------------------------------------------------------------------------
+
+routines:
+  morning-brief:
+    assignee: chief-of-staff
+    triggers:
+      - kind: schedule
+        # Mon–Fri 06:00 HST
+        cronExpression: "0 6 * * 1-5"
+        timezone: Pacific/Honolulu
+
+  eod-digest:
+    assignee: chief-of-staff
+    triggers:
+      - kind: schedule
+        # Mon–Fri 17:30 HST
+        cronExpression: "30 17 * * 1-5"
+        timezone: Pacific/Honolulu
+
+  weekly-review:
+    assignee: chief-of-staff
+    triggers:
+      - kind: schedule
+        # Sunday 18:00 HST
+        cronExpression: "0 18 * * 0"
+        timezone: Pacific/Honolulu
+
+  hourly-inbox-sweep:
+    assignee: inbox-triage
+    triggers:
+      - kind: schedule
+        # Every 15 min, 08:00–18:00 HST, Mon–Fri
+        cronExpression: "*/15 8-18 * * 1-5"
+        timezone: Pacific/Honolulu
+
+  slack-heartbeat:
+    assignee: slack-liaison
+    triggers:
+      - kind: schedule
+        # Every 10 min, 08:00–18:00 HST, Mon–Fri
+        cronExpression: "*/10 8-18 * * 1-5"
+        timezone: Pacific/Honolulu
+
+  talent-scan:
+    assignee: talent-scout
+    triggers:
+      - kind: schedule
+        # Every 2 hrs during work day, Mon–Fri
+        cronExpression: "0 9-17/2 * * 1-5"
+        timezone: Pacific/Honolulu
+
+  vendor-weekly:
+    assignee: vendor-manager
+    triggers:
+      - kind: schedule
+        # Monday 09:00 HST
+        cronExpression: "0 9 * * 1"
+        timezone: Pacific/Honolulu
+
+  contractor-daily:
+    assignee: contractor-ops
+    triggers:
+      - kind: schedule
+        # Weekday 09:00 HST
+        cronExpression: "0 9 * * 1-5"
+        timezone: Pacific/Honolulu
+
+  finance-daily:
+    assignee: finance-data
+    triggers:
+      - kind: schedule
+        # Weekday 08:00 HST
+        cronExpression: "0 8 * * 1-5"
+        timezone: Pacific/Honolulu
+
+  finance-weekly:
+    assignee: finance-data
+    triggers:
+      - kind: schedule
+        # Monday 08:00 HST (deeper weekly run)
+        cronExpression: "0 8 * * 1"
+        timezone: Pacific/Honolulu
+
+  supplies-weekly:
+    assignee: supplies-errands
+    triggers:
+      - kind: schedule
+        # Sunday 17:00 HST
+        cronExpression: "0 17 * * 0"
+        timezone: Pacific/Honolulu
+
+  automation-weekly:
+    assignee: automation-engineer
+    triggers:
+      - kind: schedule
+        # Sunday 17:00 HST (runs before weekly-review)
+        cronExpression: "0 17 * * 0"
+        timezone: Pacific/Honolulu
+
+# ----------------------------------------------------------------------------
+# Company-wide defaults
+# ----------------------------------------------------------------------------
+
+defaults:
+  approval_policy:
+    # Draft-then-approve for anything that leaves the office
+    send_email: require_approval
+    post_slack: require_approval
+    create_calendar_invite: require_approval
+    move_money: denied  # never, from any agent
+    reorder_supplies:
+      auto: whitelist_only
+      cap_usd_per_order: 200
+      cap_usd_per_month: 500
