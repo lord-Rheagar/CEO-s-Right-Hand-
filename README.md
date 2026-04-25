@@ -1,4 +1,4 @@
-# CEO's Office
+# CEO's Right Hand ✋
 
 > An autonomous ops office for Sudowrite. Twelve agents that filter the CEO's inbox and Slack into 5 to 7 daily decisions, brief every Modal, Anthropic, and Heroku renewal before it lands, screen every applicant against a rubric, and quietly automate everything that repeats.
 >
