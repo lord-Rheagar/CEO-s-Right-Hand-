@@ -83,7 +83,8 @@ Amit (sets direction, makes DECISIONs)
         └── Automation Engineer  (meta-agent: builds new agents and routines)
 ```
 
-<!-- SCREENSHOT: paperclip org chart UI showing all 12 agents under chief-of-staff -->
+<img width="1333" height="311" alt="image" src="https://github.com/user-attachments/assets/b976d927-ae5d-43fc-8f0f-ef0ff61c469b" />
+
 
 ### How each group earns its keep at Sudowrite
 
