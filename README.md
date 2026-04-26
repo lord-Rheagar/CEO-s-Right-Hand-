@@ -140,8 +140,7 @@ Five to seven items, two to three buttons each. Ten minutes and ops is done for 
 Full sample (and the EOD digest, weekly review): [`fixtures/`](./fixtures/).
 
 ## Demo 
-Loom Message - 26 April 2026 - Watch Video
-
+[![Watch the video]](https://www.loom.com/share/7c62b866d2f14684ade8fbdcd31d35ff)
 
 
 
