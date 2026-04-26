@@ -139,6 +139,9 @@ Five to seven items, two to three buttons each. Ten minutes and ops is done for 
 
 Full sample (and the EOD digest, weekly review): [`fixtures/`](./fixtures/).
 
+## Demo 
+<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/7c62b866d2f14684ade8fbdcd31d35ff" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
 
 
 ## Getting started
